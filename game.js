@@ -10,15 +10,25 @@ var DOWN = 3 ;
 var RIGHT = 2 ;
 var LEFT = 1 ;
 var myCanvas = null ;
-var myContext = null ;
 var pacman = null ;
-var pacmanX = 0 ;
-var pacmanY = 0 ;
-var pacmanDirection ;
+var myContext = null ;
 var aliens = null ;
 var spritesheet = null;
 var assetLoaded = false ;
 var spriteMapIndex = new Map();
+var aliens = [];
+var dx = [-1,0,0,1];
+var dy = [0,-1,1,0];
+var hashDirection = ["Up","Left","Right","Down"];
+
+function Character(x, y, direction, animation = 0)
+{
+	this.x = x;
+	this.y = y;
+	this.direction = direction;
+	this.animation = animation;
+}
+
 
 
 var grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -42,7 +52,8 @@ var grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]];
 
 /// body on load function
-function initGame() {
+function initGame() 
+{
 	/// draw maze ;
 	myCanvas = document.getElementById('myCanvas');
 	myCanvas.width = width*scalex ;
@@ -54,10 +65,11 @@ function initGame() {
  	spritesheet.src = "sprite.png";
  	console.log("assetLoaded "+assetLoaded);
  	populateMap();
- 	pacmanX = 9 ;
- 	pacmanY = 1 ;
- 	pacmanDirection = DOWN ;
- 	startGame();
+ 	pacman = new Character(1,9,UP);
+ 	for(var i = 0 ; i < 4 ; i++)
+ 	{
+ 		aliens.push(new Character(7+i,10,UP));
+ 	}
 }
 
 function populateMap()
@@ -85,7 +97,7 @@ onImageLoad = function ()
 	console.log("Image Loaded");
 	assetLoaded = true ;
 	console.log("complete "+ spritesheet.complete);
-	setField();
+	renderAll();
 	//context.drawImage(this,x,y);
 }
 
@@ -93,23 +105,38 @@ onImageLoad = function ()
 function setField()
 {
 	// draw here the objects from spritesheet
-	drawSprite("pacmanLeft",pacmanX,pacmanY);
-	drawSprite("alienUp",(pacmanX),(pacmanY+1));
+	drawSprite("pacmanLeft",pacman.x,pacman.y);
+	drawSprite("alienUp",(pacman.x),(pacman.y+1));
 }
 
 /// take place in array
-function drawSprite(spritename , coordinateX , coordinateY)
+function renderAll()
+{
+	myContext.clearRect(pacman.x, pacman.y, scalex, scaley);
+	drawRect(pacman.x * scalex , pacman.y * scaley, grid[pacman.x] * scalex , grid[pacman.y] * scaley , 'black');
+	for(var i = 0 ; i < 4 ; i++)
+	{
+		myContext.clearRect(aliens[i].x * scalex, aliens[i].y * scaley , scalex , scaley);
+		drawRect(aliens[i].x*scalex, aliens[i].y*scaley, 
+		grid[aliens[i].x][aliens[i].y]*scalex,
+		grid[aliens[i].x][aliens[i].y]*scaley, 'black');
+	}
+	drawSprite("pacman"+hashDirection[pacman.direction], pacman.x, pacman.y, pacman.animation);
+	for(var i = 0 ; i < 4 ; i++)
+	{
+		drawSprite("alien"+hashDirection[aliens[i].direction], aliens[i].x , aliens[i].y , aliens[i].animation);
+	}
+
+}
+
+function drawSprite(spritename , coordinateX , coordinateY,animator = 0)
 {
 	/// for canvas place coordinateX * scalex & coordinateY * scaleY
-	myContext.clearRect(coordinateX*scalex,coordinateY*scaley,scalex,scaley);
-	drawRect(coodinateX*scalex, coordinateY*scaley, 
-		grid[coordinateX][coordinateY]*scalex,
-		grid[coordinateX][coordinateY]*scaley, 'black');
 	var spr;
 	if(spriteMapIndex.get(spritename) != undefined)
 	{
 		spr = spriteMapIndex.get(spritename);
-		myContext.drawImage(spritesheet, spr[0][0], spr[0][1], scalex
+		myContext.drawImage(spritesheet, spr[animator][0], spr[animator][1], scalex
 			, scaley, coordinateX * scalex,coordinateY * scaley, scalex, scaley);
 	}
 }

@@ -1,9 +1,9 @@
 /// global variables
 var x = 0;
 var y = 0;
-var width = 20;
-var height = 20;
-var scalex = 20 ;
+var width = 19;
+var height = 19;
+var scalex = 20;
 var scaley = 20;
 var UP = 0 ;
 var DOWN = 3 ;
@@ -55,7 +55,7 @@ var grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
 function startGame() {
 	initGame();
-	setInterval(updateGame, 200);
+	setInterval(updateGame, 100);
 }
 
 function initGame() 
@@ -65,6 +65,7 @@ function initGame()
 	myCanvas.width = width*scalex ;
 	myCanvas.height = height*scaley;
 	myContext = myCanvas.getContext('2d');
+	//drawRect(0, 0, 750, 750, '');
 	drawMaze();
  	spritesheet = new Image();
  	spritesheet.onload = onImageLoad;
@@ -127,7 +128,7 @@ function renderAll()
  	for(var i = 0 ; i < 4 ; ++i)
  		c += aliens[i].x + " " + aliens[i].y + "";
  	console.log("\n " + c + " 5ara2");
-	myContext.clearRect(pacman.x, pacman.y, scalex, scaley);
+	//myContext.clearRect(pacman.x, pacman.y, scalex, scaley);
 	drawRect(pacman.x * scalex , pacman.y * scaley, grid[pacman.x] * scalex , grid[pacman.y] * scaley , 'black');
 	for(var i = 0 ; i < 4 ; i++)
 	{
@@ -172,6 +173,7 @@ function drawRect(x, y, width, height, style) {
 }
 
 function drawMaze() {
+	drawRect(0, 0, 1000, 1000, 'blue');
 	for(var i = 0 ; i < grid.length ; ++i)
 		for(var j = 0 ; j < grid[i].length ; ++j)
 			if(grid[i][j] == 1) {

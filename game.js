@@ -77,11 +77,6 @@ function populateMap()
 
 }
 
-function startGame()
-{
-	/// the real game is here
-	/// make interval as they run in it  
-}
 
 
 /// will auto run when image get's loaded
@@ -94,29 +89,28 @@ onImageLoad = function ()
 	//context.drawImage(this,x,y);
 }
 
-function updateGameArea() {
-	cx = gameArea.context;
-	cx.clearRect(0, 0, 750, 500);
-	++x;
-	++y;
-	drawRect(x, y, width, height);
-}
 
 function setField()
 {
 	// draw here the objects from spritesheet
-	drawSprite("pacmanLeft",pacmanX*scalex,pacmanY*scaley);
-	drawSprite("alienUp",(pacmanX)*scalex,(pacmanY+1)*scaley);
+	drawSprite("pacmanLeft",pacmanX,pacmanY);
+	drawSprite("alienUp",(pacmanX),(pacmanY+1));
 }
 
+/// take place in array
 function drawSprite(spritename , coordinateX , coordinateY)
 {
-	var spr ;
-	if( spriteMapIndex.get(spritename) != undefined)
+	/// for canvas place coordinateX * scalex & coordinateY * scaleY
+	myContext.clearRect(coordinateX*scalex,coordinateY*scaley,scalex,scaley);
+	drawRect(coodinateX*scalex, coordinateY*scaley, 
+		grid[coordinateX][coordinateY]*scalex,
+		grid[coordinateX][coordinateY]*scaley, 'black');
+	var spr;
+	if(spriteMapIndex.get(spritename) != undefined)
 	{
 		spr = spriteMapIndex.get(spritename);
-		myContext.drawImage(spritesheet,spr[0][0],spr[0][1],scalex
-			,scaley,coordinateX,coordinateY,scalex,scaley);
+		myContext.drawImage(spritesheet, spr[0][0], spr[0][1], scalex
+			, scaley, coordinateX * scalex,coordinateY * scaley, scalex, scaley);
 	}
 }
 

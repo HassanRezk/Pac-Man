@@ -63,14 +63,17 @@ function initGame() {
 function populateMap()
 {
 	var pD = [[scalex*0+3,scaley*3],[scalex*1,scaley*3]];
-	spriteMapIndex.set("pacmanUp",pD);
-	spriteMapIndex.set("pacmanLeft",1);
-	spriteMapIndex.set("pacmanRight",2);
+	var pL = [[scalex*0+3,scaley*0],[scalex*1,scaley*0]];
+	var pR = [[scalex*0+3,scaley*1],[scalex*1,scaley*1]];
+	var pU = [[scalex*0+3,scaley*2],[scalex*1,scaley*2]];
+	spriteMapIndex.set("pacmanUp",pU);
+	spriteMapIndex.set("pacmanLeft",pL);
+	spriteMapIndex.set("pacmanRight",pR);
 	spriteMapIndex.set("pacmanDown",pD);
-	spriteMapIndex.set("Alien0",4);
-	spriteMapIndex.set("Alien1",5);
-	spriteMapIndex.set("Alien2",6);
-	spriteMapIndex.set("Alien3",7);
+	spriteMapIndex.set("alienUp",new Array([scalex*0+3,scaley*4],[scalex*1,scaley*4]));
+	spriteMapIndex.set("alienDown",new Array([scalex*0+3,scaley*4],[scalex*1,scaley*4]));
+	spriteMapIndex.set("alienLeft",new Array([scalex*0+3,scaley*4],[scalex*1,scaley*4]));
+	spriteMapIndex.set("alienRight",new Array([scalex*0+3,scaley*4],[scalex*1,scaley*4]));
 
 }
 
@@ -102,7 +105,8 @@ function updateGameArea() {
 function setField()
 {
 	// draw here the objects from spritesheet
-	drawSprite("pacmanDown",pacmanX*scalex,pacmanY*scaley);
+	drawSprite("pacmanLeft",pacmanX*scalex,pacmanY*scaley);
+	drawSprite("alienUp",(pacmanX)*scalex,(pacmanY+1)*scaley);
 }
 
 function drawSprite(spritename , coordinateX , coordinateY)

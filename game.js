@@ -1,4 +1,5 @@
 /// global variables
+var scorecnt = 0;
 var x = 0;
 var y = 0;
 var width = 19;
@@ -16,8 +17,8 @@ var spritesheet = null;
 var assetLoaded = false ;
 var spriteMapIndex = new Map();
 var aliens = new Array();
-var dx = [-1,0,0,1];
-var dy = [0,-1,1,0];
+var dy = [-1,0,0,1];
+var dx = [0,-1,1,0];
 var hashDirection = ["Up","Left","Right","Down"];
 var loaded = false;
 
@@ -30,7 +31,7 @@ function Character(x, y, direction, animation = 0)
 }
 
 
-
+var grid2 = [];
 var grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		    [0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
 		    [0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0],
@@ -39,9 +40,9 @@ var grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		    [0,1,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0],
 		    [0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0],
 		    [0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0],
-		    [0,0,0,0,1,0,1,1,1,3,1,1,1,0,1,0,0,0,0],
-		    [1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,1,1,1],
-		    [0,0,0,0,1,0,1,1,1,3,1,1,1,0,1,0,0,0,0],
+		    [0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,0,0,0],
+		    [1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1],
+		    [0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,0,0,0],
 		    [0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0],
 		    [0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0],
 		    [0,1,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,1,0],
@@ -61,10 +62,13 @@ function startGame() {
 function initGame() 
 {
 	/// draw maze ;
+	score = document.getElementById('score');
+	score.innerHTML = "Score: " + scorecnt;
 	myCanvas = document.getElementById('myCanvas');
 	myCanvas.width = width*scalex ;
 	myCanvas.height = height*scaley;
 	myContext = myCanvas.getContext('2d');
+	document.addEventListener('keydown', keyDown, false);
 	//drawRect(0, 0, 750, 750, '');
 	drawMaze();
  	spritesheet = new Image();
@@ -72,7 +76,8 @@ function initGame()
  	spritesheet.src = "sprite.png";
  	//console.log("assetLoaded "+assetLoaded);
  	populateMap();
- 	pacman = new Character(1,9,UP);
+ 	pacman = new Character(1,9,DOWN);
+	grid[pacman.x][pacman.y] = 1;
  	for(var i = 0 ; i < 4 ; i++)
  	{
  		aliens.push(new Character(7+i,10,UP));
@@ -146,10 +151,15 @@ function renderAll()
 
 }
 
-function clearSprite(coordinateX, coordinateY) {
+function clearSprite(coordinateX, coordinateY, eat) {
 	myContext.clearRect(coordinateX*scalex, coordinateY*scaley, scalex, 
 																scaley);
 	drawRect(coordinateX*scaley, coordinateY*scaley, scalex, scaley, 'black');
+	if(!eat) {
+		var cx = (coordinateX*scalex) + scalex/2;
+		var cy = (coordinateY*scaley) + scaley/2;
+		drawCircle(cx, cy, grid[coordinateX][coordinateY]*scalex/2, 'yellow');
+	}
 }
 
 function drawSprite(spritename , coordinateX , coordinateY,animator = 0)
@@ -172,12 +182,26 @@ function drawRect(x, y, width, height, style) {
     myContext.fill();
 }
 
+function drawCircle(x, y, radius, style) {
+	myContext.beginPath();
+	myContext.fillStyle = style;
+	myContext.arc(x,y,3,0,2*Math.PI);
+	myContext.fill();
+}
+
 function drawMaze() {
 	drawRect(0, 0, 1000, 1000, 'blue');
-	for(var i = 0 ; i < grid.length ; ++i)
-		for(var j = 0 ; j < grid[i].length ; ++j)
+	for(var i = 0 ; i < grid.length ; ++i) {
+		grid2[i] = [];
+		for(var j = 0 ; j < grid[i].length ; ++j) {
+			grid2[i][j] = 0;
 			if(grid[i][j] == 1) {
 				console.log('here');
 				drawRect(i*scalex, j*scaley, grid[i][j]*scalex, grid[i][j]*scaley, 'black');
+				var cx = (i*scalex) + scalex/2;
+				var cy = (j*scaley) + scaley/2;
+				drawCircle(cx, cy, grid[i][j]*scalex/2, 'yellow');
 			}
+		}
+	}
 }

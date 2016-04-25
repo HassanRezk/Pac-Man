@@ -1,8 +1,32 @@
+function keyDown(event) {
+	if(event.keyCode == 38)
+		pacman.direction = UP;
+	else if(event.keyCode == 37)
+		pacman.direction = LEFT;
+	else if(event.keyCode == 39)
+		pacman.direction = RIGHT;
+	else if(event.keyCode == 40)
+		pacman.direction = DOWN;
+}
+
 function updateGame() {
 	clearAliens();
+	clearPacman();
+	changePacmanLocation();
 	changeAliensLocation();
+	isGameOver();
 	renderAll();
 	console.log("updated");
+}
+
+function clearPacman() {
+	clearSprite(pacman.x, pacman.y, true);
+	if(grid2[pacman.x][pacman.y] == 0) {
+		++scorecnt;
+	}
+	grid2[pacman.x][pacman.y] = 1;
+	score = document.getElementById('score');
+	score.innerHTML = "Score: " + scorecnt;
 }
 
 function changeAliensLocation() {
@@ -15,6 +39,17 @@ function changeAliensLocation() {
 		aliens[i].y = newy;
 		++aliens[i].animation;
 		aliens[i].animation %= 2;
+	}
+}
+
+function changePacmanLocation() {
+	var newx = (pacman.x + dx[pacman.direction])%width;
+	var newy = (pacman.y + dy[pacman.direction])%height;
+	if(isWall(newx, newy)) {
+		pacman.x = newx;
+		pacman.y = newy;
+		++pacman.animation;
+		pacman.animation %= 2;
 	}
 }
 
@@ -39,7 +74,10 @@ function changeAlienDirection(i) {
 
 function clearAliens() {
 	for(var i = 0 ; i < 4 ; ++i) {
-		clearSprite(aliens[i].x, aliens[i].y);
+		var eat;
+		if(grid2[aliens[i].x][aliens[i].y] == 1)
+			clearSprite(aliens[i].x, aliens[i].y, true);
+		else clearSprite(aliens[i].x, aliens[i].y, false);
 	}
 }
 
@@ -52,4 +90,10 @@ function isAlien(coordinateX, coordinateY, j) {
 		if(i != j && (coordinateX == aliens[i].x && coordinateY == aliens[i].y))
 			return true;
 	return false;
+}
+
+function isGameOver() {
+	for(var i = 0 ; i < 4 ; ++i)
+		if(aliens[i].x == pacman.x && aliens[i].y == pacman.y)
+			alert('game over');
 }

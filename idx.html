@@ -15,7 +15,7 @@
 			}
 		</style>
 	</head>
-	<body onload="startGame();">
+	<body>
 			<audio src="m.wav" loop="true" autoplay="true"></audio>
 			<canvas id = "myCanvas"></canvas>
 			<script type="text/javascript" src="game.js"></script>
@@ -24,6 +24,7 @@
 				<input type="text" name="name"></input>
 				<h1 id="score"></h1>
 				<input type="hidden" id="score_t" name="score" value="">
+				<button onclick="startGame();">Start Game</button>
 			</form>
 	</body>
 </html>

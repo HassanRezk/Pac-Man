@@ -1,5 +1,6 @@
 /// global variables
 var scorecnt = 0;
+var food = 0;
 var x = 0;
 var y = 0;
 var width = 19;
@@ -203,6 +204,7 @@ function drawMaze() {
 				var cx = (i*scalex) + scalex/2;
 				var cy = (j*scaley) + scaley/2;
 				drawCircle(cx, cy, grid[i][j]*scalex/2, 'yellow');
+				++food;
 			}
 		}
 	}

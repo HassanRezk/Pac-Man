@@ -94,7 +94,8 @@ function isAlien(coordinateX, coordinateY, j) {
 
 function isGameOver() {
 	for(var i = 0 ; i < 4 ; ++i)
-		if(aliens[i].x == pacman.x && aliens[i].y == pacman.y)
+		if((aliens[i].x == pacman.x && aliens[i].y == pacman.y)
+						|| food == scorecnt)
 		{
 			document.getElementById("score_t").value = scorecnt;
 			document.getElementById("myForm").submit();

@@ -83,8 +83,10 @@ function initGame()
  		aliens.push(new Character(7+i,10,UP));
  	}
  	var c = "";
- 	for(var i = 0 ; i < 4 ; ++i)
+ 	for(var i = 0 ; i < 4 ; ++i) {
+ 		grid[aliens[i].x][aliens[i].y] = 1;
  		c += aliens[i].x + " " + aliens[i].y + "";
+ 	}
  	console.log(c + " 5ara");
 }
 

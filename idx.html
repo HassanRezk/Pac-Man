@@ -19,6 +19,11 @@
 			<audio src="m.wav" loop="true" autoplay="true"></audio>
 			<canvas id = "myCanvas"></canvas>
 			<script type="text/javascript" src="game.js"></script>
-			<h1 id="score"></h1>
+			<form id="myForm" action="score.php">
+				<label>Name</label>
+				<input type="text" name="name"></input>
+				<h1 id="score"></h1>
+				<input type="hidden" id="score_t" name="score" value="">
+			</form>
 	</body>
 </html>

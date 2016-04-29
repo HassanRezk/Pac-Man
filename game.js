@@ -57,7 +57,7 @@ var grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
 function startGame() {
 	initGame();
-	setInterval(updateGame, 100);
+	setInterval(updateGame, 90);
 }
 
 function initGame() 
